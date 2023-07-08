@@ -1,0 +1,93 @@
+﻿@model tinyBlog.Models.Post
+@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .oval-container {
+        border-radius: 20px; /* Half the height to create an oval shape */
+        background-color: #5e5f61; /* Button background color */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        position: fixed;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-60%);
+    }
+
+    
+    .oval-button {
+        width: 700px; /* Adjust the width as needed */
+        height: 30px; /* Adjust the height as needed */
+        border-radius: 15px; /* Half the height to create an oval shape */
+        background-color: #18191a; /* Button color */
+        display: block;
+        color : white
+    }
+</style>
+
+<!-- Button trigger modal -->
+<div class="d-flex justify-content-center mt-5">
+    <button type="button" class="oval-container">
+        <span type="button" class="oval-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            What's on your mind?
+        </span>
+    </button>
+</div>
+
+
+<!-- Message modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Content" class="control-label"></label>
+                                <input asp-for="Content" class="form-control" />
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PostType" class="control-label"></label>
+                                <select asp-for="PostType" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
+                                <span asp-validation-for="PostType" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FeaturedImageUrl" class="control-label"></label>
+                                <input asp-for="FeaturedImageUrl" class="form-control" />
+                                <span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="UrlHandle" class="control-label"></label>
+                                <input asp-for="UrlHandle" class="form-control" />
+                                <span asp-validation-for="UrlHandle" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
