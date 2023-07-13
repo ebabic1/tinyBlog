@@ -84,14 +84,13 @@
 						</label>
 					</div>
 
-					<div class="form-group">
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						<input type="submit" value="Create" class="btn btn-primary" />
 					</div>
 				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button id="btnSave" type="button" class="btn btn-primary">Save changes</button>
-				</div>
+				
 
 			</div>
 
@@ -127,9 +126,9 @@
 							</small>
 							<p class="card-text">@item.Content</p>
 							<div class="post-actions">
-								<a href="@Url.Action("Edit", new { id = item.Id })">Edit</a>
+								<a href="@Url.Action("Edit", "Posts", new { id = item.Id })">Edit</a>
 								<a href="@Url.Action("Details", "Posts", new { id = item.Id })">Details</a>
-								<a href="@Url.Action("Delete", new { id = item.Id })">Delete</a>
+								<a href="@Url.Action("Delete", "Posts", new { id = item.Id })">Delete</a>
 							</div>
 						</div>
 						<div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
