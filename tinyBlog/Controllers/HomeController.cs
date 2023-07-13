@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
+using tinyBlog.Data;
 using tinyBlog.Models;
 
 namespace tinyBlog.Controllers
@@ -9,15 +11,24 @@ namespace tinyBlog.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _context;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
-
+        public async Task<IActionResult> CreatePost(Post post)
+        {
+            post.Author = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            post.PublishDate = DateTime.Now;
+            _context.Add(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Index()
         {
             Post post = new Post();
+            ViewBag.AllPosts = _context.Posts.Select(x=>x).ToList();
             return View(post);
         }
     

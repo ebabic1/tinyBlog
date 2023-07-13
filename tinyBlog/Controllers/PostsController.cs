@@ -61,17 +61,13 @@ namespace tinyBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,PostType,FeaturedImageUrl,UrlHandle,Visible,PublishDate")] Post post)
+        public async Task<IActionResult> Create(Post post)
         {
-            if (ModelState.IsValid)
-            {
                 post.Author = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 post.PublishDate= DateTime.Now;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(post);
         }
 
         // GET: Posts/Edit/5

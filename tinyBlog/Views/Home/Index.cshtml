@@ -1,93 +1,158 @@
 ﻿@model tinyBlog.Models.Post
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 <style>
-    .oval-container {
-        border-radius: 20px; /* Half the height to create an oval shape */
-        background-color: #5e5f61; /* Button background color */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        position: fixed;
-        top: 70px;
-        left: 50%;
-        transform: translateX(-60%);
-    }
+	.oval-container {
+		border-radius: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: none;
+		top: 70px;
+	}
 
-    
-    .oval-button {
-        width: 700px; /* Adjust the width as needed */
-        height: 30px; /* Adjust the height as needed */
-        border-radius: 15px; /* Half the height to create an oval shape */
-        background-color: #18191a; /* Button color */
-        display: block;
-        color : white
-    }
+
+	.oval-button {
+		width: 700px;
+		height: 30px;
+		border-radius: 15px;
+		background-color: #18191a;
+		display: block;
+		color: white
+	}
+
+
+
+
+	.modal-content {
+		border-radius: 3%;
+		overflow: hidden;
+	}
+
+	.form-control.oval-dropdown {
+		border-radius: 50px;
+		padding: 5px 20px;
+		width: 50%
+	}
+
+	.form-control.wide-input {
+		width: 100%;
+		height: 120px;
+	}
+
 </style>
 
-<!-- Button trigger modal -->
-<div class="d-flex justify-content-center mt-5">
-    <button type="button" class="oval-container">
-        <span type="button" class="oval-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            What's on your mind?
-        </span>
-    </button>
-</div>
 
 
-<!-- Message modal -->
+
+<!-- Create post modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <form asp-action="Create">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="Content" class="control-label"></label>
-                                <input asp-for="Content" class="form-control" />
-                                <span asp-validation-for="Content" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="PostType" class="control-label"></label>
-                                <select asp-for="PostType" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
-                                <span asp-validation-for="PostType" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="FeaturedImageUrl" class="control-label"></label>
-                                <input asp-for="FeaturedImageUrl" class="form-control" />
-                                <span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="UrlHandle" class="control-label"></label>
-                                <input asp-for="UrlHandle" class="form-control" />
-                                <span asp-validation-for="UrlHandle" class="text-danger"></span>
-                            </div>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title">Make a post</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form asp-action="CreatePost">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<div class="form-group">
+						<label asp-for="Content" class="control-label"></label>
+						<input asp-for="Content" class="form-control" autocomplete="off" />
+						<span asp-validation-for="Content" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="PostType" class="control-label"></label>
+						<select asp-for="PostType" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
+						<span asp-validation-for="PostType" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="FeaturedImageUrl" class="control-label"></label>
+						<input asp-for="FeaturedImageUrl" class="form-control" autocomplete="off" />
+						<span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="UrlHandle" class="control-label"></label>
+						<input asp-for="UrlHandle" class="form-control" autocomplete="off" />
+						<span asp-validation-for="UrlHandle" class="text-danger"></span>
+					</div>
 
-                            <div class="form-group form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
-                                </label>
-                            </div>
+					<div class="form-group form-check">
+						<label class="form-check-label">
+							<input class="form-check-input" asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+						</label>
+					</div>
 
-                            <div class="form-group">
-                                <input type="submit" value="Create" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
+					<div class="form-group">
+						<input type="submit" value="Create" class="btn btn-primary" />
+					</div>
+				</form>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button id="btnSave" type="button" class="btn btn-primary">Save changes</button>
+				</div>
+
+			</div>
+
+
+
+
+		</div>
+	</div>
 </div>
+
+
+<div class="blog-posts">
+	<!-- Button trigger modal -->
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-sm-5 offset-sm-4 col-md-5 offset-md-4 col-lg-5 offset-lg-4">
+				<div class="d-flex justify-content-center mt-5">
+					<div class="oval-container">
+						<button type="button" class="oval-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							What's on your mind?
+						</button>
+					</div>
+				</div>
+				@foreach (Post item in ViewBag.AllPosts)
+				{
+					<div class="card">
+						<img class="card-img" src="https://placehold.co/600x400" alt="placeholder">
+						<div class="card-body">
+							<h4 class="card-title">Blog post</h4>
+							<small class="text-muted cat">
+								<i class="far fa-clock text-info"></i> Read time
+								<i class="fas fa-users text-info"></i> @item.Author
+							</small>
+							<p class="card-text">@item.Content</p>
+							<div class="post-actions">
+								<a href="@Url.Action("Edit", new { id = item.Id })">Edit</a>
+								<a href="@Url.Action("Details", "Posts", new { id = item.Id })">Details</a>
+								<a href="@Url.Action("Delete", new { id = item.Id })">Delete</a>
+							</div>
+						</div>
+						<div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+							<div class="views">
+								@item.PublishDate
+							</div>
+							<div class="stats">
+								<i class="fa-solid fa-eye"></i> 1347
+								<i class="far fa-comment"></i> 12
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+    }
+</div>
+
