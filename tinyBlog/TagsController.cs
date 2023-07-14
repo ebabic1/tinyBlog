@@ -1,105 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using tinyBlog.Data;
 using tinyBlog.Models;
 
-namespace tinyBlog.Controllers
+namespace tinyBlog
 {
-    [Authorize]
-    public class PostsController : Controller
+    public class TagsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PostsController(ApplicationDbContext context)
+        public TagsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Posts
+        // GET: Tags
         public async Task<IActionResult> Index()
         {
-              return _context.Posts != null ? 
-                          View(await _context.Posts.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+              return _context.Tags != null ? 
+                          View(await _context.Tags.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Tags'  is null.");
         }
-        
 
-        // GET: Posts/Details/5
+        // GET: Tags/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
 
-            var post = await _context.Posts
+            var tag = await _context.Tags
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return View(post);
+            return View(tag);
         }
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> AddPostTag([Bind("Tags")] Post post)
-		{
-			post.Tags.Add(new Tag());
-			return PartialView("Tags", post);
-		}
-		// GET: Posts/Create
-		public IActionResult Create()
+
+        // GET: Tags/Create
+        public IActionResult Create()
         {
-            
             return View();
         }
 
-        // POST: Posts/Create
+        // POST: Tags/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Post post)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Tag tag)
         {
-                post.Author = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                post.PublishDate= DateTime.Now;
-                _context.Add(post);
+            if (ModelState.IsValid)
+            {
+                _context.Add(tag);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            return View(tag);
         }
 
-        // GET: Posts/Edit/5
+        // GET: Tags/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Posts == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
+            var tag = await _context.Tags.FindAsync(id);
+            if (tag == null)
             {
                 return NotFound();
             }
-            return View(post);
+            return View(tag);
         }
 
-        // POST: Posts/Edit/5
+        // POST: Tags/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,PostType,FeaturedImageUrl,UrlHandle,Author,Visible,PublishDate")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Tag tag)
         {
-            if (id != post.Id)
+            if (id != tag.Id)
             {
                 return NotFound();
             }
@@ -108,12 +99,12 @@ namespace tinyBlog.Controllers
             {
                 try
                 {
-                    _context.Update(post);
+                    _context.Update(tag);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!TagExists(tag.Id))
                     {
                         return NotFound();
                     }
@@ -124,49 +115,49 @@ namespace tinyBlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+            return View(tag);
         }
 
-        // GET: Posts/Delete/5
+        // GET: Tags/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Posts == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
 
-            var post = await _context.Posts
+            var tag = await _context.Tags
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return View(post);
+            return View(tag);
         }
 
-        // POST: Posts/Delete/5
+        // POST: Tags/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Posts == null)
+            if (_context.Tags == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Tags'  is null.");
             }
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
+            var tag = await _context.Tags.FindAsync(id);
+            if (tag != null)
             {
-                _context.Posts.Remove(post);
+                _context.Tags.Remove(tag);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(int id)
+        private bool TagExists(int id)
         {
-          return (_context.Posts?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Tags?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

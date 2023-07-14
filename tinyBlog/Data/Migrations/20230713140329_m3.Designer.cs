@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tinyBlog.Data;
 
@@ -11,13 +12,14 @@ using tinyBlog.Data;
 namespace tinyBlog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230713140329_m3")]
+    partial class m3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.20")
+                .HasAnnotation("ProductVersion", "6.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -224,6 +226,21 @@ namespace tinyBlog.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PostTag", b =>
+                {
+                    b.Property<int>("PostsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("PostTag");
+                });
+
             modelBuilder.Entity("tinyBlog.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -241,6 +258,7 @@ namespace tinyBlog.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FeaturedImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostType")
@@ -250,6 +268,7 @@ namespace tinyBlog.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UrlHandle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Visible")
@@ -258,21 +277,6 @@ namespace tinyBlog.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Posts", (string)null);
-                });
-
-            modelBuilder.Entity("tinyBlog.Models.PostTag", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("PostTag");
                 });
 
             modelBuilder.Entity("tinyBlog.Models.Tag", b =>
@@ -343,29 +347,19 @@ namespace tinyBlog.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("tinyBlog.Models.PostTag", b =>
+            modelBuilder.Entity("PostTag", b =>
                 {
                     b.HasOne("tinyBlog.Models.Post", null)
-                        .WithMany("PostTags")
-                        .HasForeignKey("PostId")
+                        .WithMany()
+                        .HasForeignKey("PostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("tinyBlog.Models.Tag", null)
-                        .WithMany("PostTags")
-                        .HasForeignKey("TagId")
+                        .WithMany()
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("tinyBlog.Models.Post", b =>
-                {
-                    b.Navigation("PostTags");
-                });
-
-            modelBuilder.Entity("tinyBlog.Models.Tag", b =>
-                {
-                    b.Navigation("PostTags");
                 });
 #pragma warning restore 612, 618
         }
