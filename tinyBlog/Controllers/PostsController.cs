@@ -45,7 +45,8 @@ namespace tinyBlog.Controllers
             {
                 return NotFound();
             }
-
+            post.Views++;
+            await _context.SaveChangesAsync();
             return View(post);
         }
 		[HttpPost]
