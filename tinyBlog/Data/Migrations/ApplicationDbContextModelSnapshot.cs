@@ -249,8 +249,15 @@ namespace tinyBlog.Data.Migrations
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UrlHandle")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Views")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Visible")
                         .HasColumnType("bit");

@@ -22,9 +22,10 @@ namespace tinyBlog.Controllers
             _context = context;
             _userManager = userManager;
         }
-        public async Task<IActionResult> CreatePost([Bind("Content,Tags")] Post post)
+        [HttpPost]
+        public async Task<IActionResult> CreatePost([Bind("Content,Tags,Title,Visible")] Post post)
         {
-           
+                
 				post.Author = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 				post.PublishDate = DateTime.Now;
 				_context.Add(post);
@@ -35,16 +36,21 @@ namespace tinyBlog.Controllers
         public IActionResult Index()
         {
             Post post = new Post();
-            ViewBag.AllPosts = _context.Posts.Include(x => x.Tags).Select(x => x).ToList();
-            foreach(Post p in ViewBag.AllPosts)
-            {
-                p.Author = _userManager.FindByIdAsync(p.Author).Result.Email;
-            }
+            
             /*Might use this to implement tag recommendations based on all the tags in the db*/
             ViewBag.AllTag = _context.Tags.Select(x=>x).ToList();
             return View(post);
         }
-        
+        public IActionResult BlogEntriesPartial()
+        {
+			List<Post> postList = _context.Posts.Include(x => x.Tags).Select(x => x).ToList();
+			foreach (Post p in postList)
+			{
+				p.Author = _userManager.FindByIdAsync(p.Author).Result.Email;
+			}
+            postList = postList.OrderByDescending(p=>p.PublishDate).ToList();
+            return PartialView("_BlogEntries", postList);
+        }
 
         public IActionResult Privacy()
         {

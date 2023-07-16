@@ -3,50 +3,42 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
-
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
 <h4>Post</h4>
+<h1>Edit</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-14">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control">
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div>
+                <textarea asp-for="Content" id="textEditor"></textarea>
+                <script>
+                    var editor = new FroalaEditor("#textEditor", {
+                        enter: FroalaEditor.ENTER_P,
+                        height: 350,
+                        zIndex: 8000
+                    })
+                </script>
             </div>
             <div class="form-group">
                 <label asp-for="PostType" class="control-label"></label>
-                <select asp-for="PostType" class="form-control"></select>
+                <select asp-for="PostType" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
                 <span asp-validation-for="PostType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FeaturedImageUrl" class="control-label"></label>
-                <input asp-for="FeaturedImageUrl" class="form-control" />
-                <span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UrlHandle" class="control-label"></label>
-                <input asp-for="UrlHandle" class="form-control" />
-                <span asp-validation-for="UrlHandle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="Author"/>
+            <input type="hidden" asp-for="PublishDate" />
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
                 </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="PublishDate" class="control-label"></label>
-                <input asp-for="PublishDate" class="form-control" />
-                <span asp-validation-for="PublishDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -61,4 +53,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var editor = new FroalaEditor("#textEditor", {
+            enter: FroalaEditor.ENTER_P,
+            height: 350,
+            zIndex: 8000
+        })
+    </script>
 }

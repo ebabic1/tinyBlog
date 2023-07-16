@@ -1,0 +1,109 @@
+﻿@model List<Post>
+@{
+}
+<style>
+	.dropdown {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 2;
+	}
+
+	.card-body{
+		max-height: 200px !important;
+	}
+	.card {
+
+		&::before, &::after
+
+	{
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		transition: opacity .38s ease-in-out, transform .35s ease-in-out;
+		content: '';
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	&::before {
+		transform: scale3d(0, 1, 1);
+		transform-origin: left top;
+		border-top: 1px solid #acacac;
+		border-bottom: 1px solid #acacac;
+	}
+
+	&::after {
+		transform: scale3d(1, 0, 1);
+		transform-origin: right top;
+		border-right: 1px solid #acacac;
+		border-left: 1px solid #acacac;
+	}
+
+	&:hover,
+	&:focus {
+		&::before, &::after
+
+	{
+		transform: scale3d(1, 1, 1);
+		opacity: 1;
+	}
+
+	}
+	}
+	.card-footer{
+		background: linear-gradient(to bottom, rgba(255,255,255,0.56) 0%,rgba(255,255,255,1) 32%,rgba(255,255,255,1) 100%);
+	}
+</style>
+
+@foreach (Post item in Model)
+{
+	<div class="card col-12 col-sm-7 offset-sm-2 col-md-7 offset-md-2 col-lg-5 offset-lg-4">
+		<div class="dropdown">
+			<button button class="btn btn-secondary dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+			<div class="dropdown-menu" aria-labelledby="settingsDropdown">
+				<a class="dropdown-item" href="@Url.Action("Edit", "Posts", new { id = item.Id })">Edit</a>
+				<a class="dropdown-item" href="@Url.Action("Details", "Posts", new { id = item.Id })">Details</a>
+				<a class="dropdown-item" href="@Url.Action("Delete", "Posts", new { id = item.Id })">Delete</a>
+			</div>
+		</div>
+		<img class="card-img" src="https://placehold.co/600x400" alt="placeholder">
+		<a href=" @Url.Action("Details", "Posts", new { id = item.Id })" class="stretched-link"></a>
+		<div class="card-body ">
+			@if (item.Title != null)
+			{
+				<h4 class="card-title">@item.Title</h4>
+			}
+			<small class="text-muted cat">
+				<i class="far fa-clock text-info"></i> Read time
+				<i class="fas fa-users text-info"></i> Posted by @item.Author in @for (var i = 0; i < @item.Tags.Count; i++)
+				{
+					@if (i != @item.Tags.Count - 1)
+					{
+						<i>@item.Tags[i].Name, </i>
+					}
+					else
+					{
+						<i>@item.Tags[i].Name</i>
+					}
+				}
+			</small>
+
+			<p class="card-text">@Html.Raw(@item.Content)</p>
+		</div>
+		<div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+			<div class="views">
+				@item.PublishDate
+			</div>
+			<div class="stats">
+				<i class="fa-solid fa-eye"></i> @item.Views
+				<i class="far fa-comment"></i> 12
+			</div>
+		</div>
+	</div>
+	
+}
+@section Scripts{
+}

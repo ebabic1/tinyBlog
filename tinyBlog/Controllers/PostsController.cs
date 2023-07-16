@@ -97,13 +97,12 @@ namespace tinyBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,PostType,FeaturedImageUrl,UrlHandle,Author,Visible,PublishDate")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,PostType,Visible,Author,Title,PublishDate")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -124,6 +123,7 @@ namespace tinyBlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            
             return View(post);
         }
 

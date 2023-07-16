@@ -12,7 +12,9 @@ namespace tinyBlog.Models
         public string? FeaturedImageUrl { get; set; }   
         public string? UrlHandle { get; set; }
         public string Author { get; set; }  
-        public Boolean Visible { get; set; }    
+        public string Title { get; set; }  
+        public Boolean Visible { get; set; }
+        public long Views { get; set; } = 0;
         public DateTime PublishDate { get; set; }
         public List<Tag> Tags { get; set; } = new();
 		public List<PostTag> PostTags { get; set; } = new();

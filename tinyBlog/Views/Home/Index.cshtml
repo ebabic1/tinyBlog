@@ -35,10 +35,26 @@
 		height: 120px;
 	}
 
+	.modal-dialog {
+		transform: none !important;
+		-webkit-transform: none !important;
+		-moz-transform: none !important;
+		max-width: 90%
+	}
+
+	
+	div#textEditor {
+		width: 81%;
+		margin: auto;
+		text-align: left;
+	}
 </style>
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
 <!-- Create post modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered " role="document" style="width:90%">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title">Make a post</h1>
@@ -48,9 +64,19 @@
 				<form asp-action="CreatePost" id="createPostForm">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					<div class="form-group">
-						<label asp-for="Content" class="control-label"></label>
-						<input asp-for="Content" class="form-control" autocomplete="off" />
-						<span asp-validation-for="Content" class="text-danger"></span>
+						<label asp-for="Title" class="control-label"></label>
+						<input asp-for="Title" class="form-control">
+						<span asp-validation-for="Title" class="text-danger"></span>
+					</div>
+					<div>
+						<textarea asp-for="Content" id="textEditor"></textarea>
+						<script>
+								var editor = new FroalaEditor("#textEditor", {
+									enter: FroalaEditor.ENTER_P,
+									height: 350,
+									zIndex: 8000
+								})
+						</script>
 					</div>
 					<div class="form-group">
 						<label asp-for="PostType" class="control-label"></label>
@@ -105,48 +131,12 @@
 						</button>
 					</div>
 				</div>
-				@foreach (Post item in ViewBag.AllPosts)
-				{
-					<div class="card">
-						<img class="card-img" src="https://placehold.co/600x400" alt="placeholder">
-						<div class="card-body">
-							<h4 class="card-title">Blog post</h4>
-							<small class="text-muted cat">
-								<i class="far fa-clock text-info"></i> Read time
-								<i class="fas fa-users text-info"></i> Posted by @item.Author in @for (var i = 0; i < @item.Tags.Count; i++)
-								{
-									@if (i != @item.Tags.Count - 1)
-									{
-										<i>@item.Tags[i].Name, </i>
-									}
-									else
-									{
-										<i>@item.Tags[i].Name</i>
-									}
-								}
-							</small>
-							
-							<p class="card-text">@item.Content</p>
-							<div class="post-actions">
-								<a href="@Url.Action("Edit", "Posts", new { id = item.Id })">Edit</a>
-								<a href="@Url.Action("Details", "Posts", new { id = item.Id })">Details</a>
-								<a href="@Url.Action("Delete", "Posts", new { id = item.Id })">Delete</a>
-							</div>
-						</div>
-						<div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
-							<div class="views">
-								@item.PublishDate
-							</div>
-							<div class="stats">
-								<i class="fa-solid fa-eye"></i> 1347
-								<i class="far fa-comment"></i> 12
-							</div>
-						</div>
-					</div>
-				}
+				
 			</div>
 		</div>
 	</div>
+</div>
+<div id="blogEntries">
 </div>
 @section Scripts{
 	@{
@@ -168,6 +158,18 @@
 		$('#exampleModal').on('hidden.bs.modal', function () {
 			$(this).find('form').trigger('reset');
 		})
+	</script>
+	<script>
+		(function () {
+			new FroalaEditor("#textEditor", {
+				enter: FroalaEditor.ENTER_P,
+				height: 350,
+				zIndex: 8000
+			})
+		})()
+	</script>
+	<script>
+		$('#blogEntries').load("/Home/BlogEntriesPartial")
 	</script>
     }
 
